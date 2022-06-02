@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
 import { signIn } from 'next-auth/client';
 import classes from './auth-form.module.css';
+import { useRouter } from 'next/router';
 
 async function createUser(email, password) {
   const response = await fetch('api/auth/signup', {
@@ -25,6 +26,7 @@ function AuthForm() {
   const passwordInputRef = useRef();
 
   const [isLogin, setIsLogin] = useState(true);
+  const router = useRouter();
 
   function switchAuthModeHandler() {
     setIsLogin((prevState) => !prevState);
@@ -53,13 +55,14 @@ function AuthForm() {
         password: enteredPassword,
       });
 
-      console.log(result); // object
+      console.log('logged in: ', result); // object
 
       // auth successfuly
       // cookies are set automatically
       // tokens are generated and used automatically
       if (!result.error) {
         //set some auth state, redirect, etc
+        router.replace('/profile'); //redirect after authentication is successfully
       }
     } else {
       //register new user
